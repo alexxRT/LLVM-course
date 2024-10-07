@@ -3,9 +3,6 @@
 #define NUM_CIRCLES 8
 const int SPEED = 1;
 
-extern int WIN_HIGHT;
-extern int WIN_WIDTH;
-
 typedef struct circle_t {
     int center_x;
     int center_y;
@@ -21,7 +18,10 @@ uint32_t get_pixel_color(int x, int y, circle_t* circles) {
     assert(y <= WIN_HIGHT && "y coordinate is out of range to paint pixel");
 
     for (int i = 0; i < NUM_CIRCLES; i ++) {
-        if (pow(x - circles[i].center_x, 2) + pow(y - circles[i].center_y, 2) <= pow(circles[i].radius, 2)) 
+        int x_squared = (x - circles[i].center_x) * (x - circles[i].center_x);
+        int y_squared = (y - circles[i].center_y) * (y - circles[i].center_y);
+        int r_squared = (circles[i].radius) * (circles[i].radius);
+        if (x_squared + y_squared <= r_squared)
             return circles[i].rgba;
     }
     return 0xD3D3D3FF;

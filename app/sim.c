@@ -3,9 +3,6 @@
 #define FRAME_TICKS 20
 static uint32_t Tick = 0;
 
-int WIN_WIDTH;
-int WIN_HIGHT;
-
 SDL_Renderer* renderer = NULL;
 SDL_Window*   window   = NULL;
 
@@ -14,9 +11,6 @@ void create_window() {
 
     SDL_DisplayMode d_mode = {};
     SDL_GetCurrentDisplayMode(0, &d_mode);
-
-    WIN_WIDTH = d_mode.w / 2;
-    WIN_HIGHT = d_mode.h / 2;
 
     SDL_CreateWindowAndRenderer(WIN_WIDTH, WIN_HIGHT, 0, &window, &renderer);
     SDL_SetWindowTitle(window, "LLVM Graphic App");
