@@ -19,8 +19,6 @@ class InstructionsInfoPass : public PassInfoMixin<InstructionsInfoPass> {
         }
 
         PreservedAnalyses run(Module &M, ModuleAnalysisManager &AM) {
-            outs() << "Dumping trace for module: " << M.getName() << "\n";
-
             //Prepare builder to modify IR
             LLVMContext &Ctx = M.getContext();
             IRBuilder<> builder(Ctx);
