@@ -1,40 +1,56 @@
 import matplotlib.pylab as plt
+import sys
 
+MAX_WIN_SIZE = 5
+
+def get_win_name(win: list):
+    return "<-".join(win)
+
+def read_window(instr_list: list, start_indx: int, win_size):
+    window = []
+
+    if start_indx + win_size >= len(trace_rec):
+        print("Unable to read win. Lack of records")
+        return None, -1
+
+    for i in instr_list[start_indx:start_indx + win_size]:
+        window.append(i)
+
+    return window, start_indx + win_size
 
 if __name__ == "__main__":
-    module = input("Please enter module name you want statistic for: ")
-
-    module_start_indx = 0
-    module_end_indx = 0
-    trace_rec = []
-    # prepare trace extract one we need
-    with open("trace.txt", "r") as trace:
-        modules_trace = trace.readlines()
-        for line in modules_trace:
-            if module in line:
-                module_start_indx = modules_trace.index(line) + 1
-                break
-        for line_indx, line in enumerate(modules_trace[module_start_indx:]):
-            if "<-" not in line:
-                module_end_indx = line_indx
-                break
+    if len(sys.argv) < 2:
+        print("Please provide window size for analizies: python3 statistic.py win_size")
+        exit(-1)
     
-    trace_rec = [trace.strip("\n") for trace in modules_trace[module_start_indx:module_end_indx]]
-    print(f"Module {module} has {len(trace_rec)} lines in a record")
+    win_size = int(sys.argv[1])
+    if (win_size > MAX_WIN_SIZE):
+        print(f"Window maximum size is {MAX_WIN_SIZE}")
+        exit(-1)
+
+    trace_rec = []
+    with open("trace.txt", "r") as trace:
+        trace_rec = [line.strip("\n") for line in trace.readlines()]
     
     if not trace_rec: 
-        print(f"No trace records to present statistic for module {module}")
+        print(f"No trace records to present build statistic")
         exit(-1)
 
     stat = {}
-    # collect statistic
-    for line in trace_rec:
-        if not stat.get(line, False):
-            stat[line] = 1
-        else:
-            stat[line] += 1
+    for indx, trace in enumerate(trace_rec):
+        window, end_indx = read_window(trace_rec, indx, win_size)
+        if window is None:
+            break
 
-    figure  = plt.figure(figsize=(10, 7))
+        win_name = get_win_name(window)
+        if not stat.get(win_name, False):
+            stat[win_name] = 1
+        else:
+            stat[win_name] += 1
+
+    stat = {k: v for k, v in stat.items() if v != 0}
+
+    figure  = plt.figure(figsize=(15, 7))
 
     y = [int(y) for y in stat.values()]
     x = [str(x) for x in stat.keys()]
@@ -42,7 +58,7 @@ if __name__ == "__main__":
     bars = plt.bar(stat.keys(), stat.values())
 
     for i in range(len(x)):
-        plt.text(i, y[i] // 2, f"{y[i]}", ha="center")
+        plt.text(i, 2 * y[i] // 3, f"{y[i]}", ha="center", rotation=90)
 
     plt.grid(None, "both", "y")
 

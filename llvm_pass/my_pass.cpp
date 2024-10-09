@@ -32,16 +32,14 @@ class InstructionsInfoPass : public PassInfoMixin<InstructionsInfoPass> {
             FunctionType *DumpTraceFuncType =
             FunctionType::get(retType, funcStartParamTypes, false);
 
-            FunctionCallee DumpTraceFunc = M.getOrInsertFunction(
-            "DumpTrace", DumpTraceFuncType);
+            FunctionCallee DumpTraceFunc = M.getOrInsertFunction("DumpTrace", DumpTraceFuncType);
             for (auto &F : M) {
                 if (isDumpFunction(F.getName()))
                     continue;
                 for (auto &B : F) {
                     for (auto &I : B) {
                         // skipping loger function and phi 
-                        if (dyn_cast<Instruction>(&I) && \
-                            !isPhiInstr(I.getOpcodeName())) {
+                        if (!isPhiInstr(I.getOpcodeName())) {
                             builder.SetInsertPoint(&I);
                             Value *instr_name = builder.CreateGlobalStringPtr(I.getOpcodeName());
                             builder.CreateCall(DumpTraceFunc, {instr_name});
@@ -49,10 +47,8 @@ class InstructionsInfoPass : public PassInfoMixin<InstructionsInfoPass> {
                     }
                 }
             }
-            outs() << "\n";
             return PreservedAnalyses::none();
         }
-
         static bool isRequired() { return true; }
 };
 

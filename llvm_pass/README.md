@@ -7,10 +7,15 @@ Implemented llvm pass which prints names of Users' Instructions. Based on it, st
 ## Usage
 
 ```bash
-python3 statistic.py
-Please enter module name you want statistic for: app.c (press enter)
+python3 statistic.py win_size
 ```
 
 ## Result
 
-![result](./examples/pass_stat.png)
+### Window size=1
+
+![result](./examples/Figure_2.png)
+
+### Window size=2
+
+![result](./examples/Figure_1.png)
