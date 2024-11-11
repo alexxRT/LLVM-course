@@ -6,7 +6,6 @@ const int      CENTER_X = WIN_WIDTH / 2;
 
 typedef struct square_t {
     int center_y;
-    int velocity;
     int side_length;
 } square_t;
 
@@ -21,7 +20,6 @@ void app() {
     // init square
     square_t square    = {};
     square.center_y    = WIN_HIGHT / 2;
-    square.velocity    = SPEED;
     square.side_length = WIN_WIDTH / 10;
 
     // now we need to paint square moving
@@ -35,16 +33,9 @@ void app() {
         // displays colored pixels
         flush_window();
       
-        // bounce when reaching ceilling
-        if (WIN_HIGHT - square.center_y < square.side_length / 2) {
-            square.velocity = -square.velocity;
-            square.center_y = WIN_HIGHT - square.side_length / 2;
+        if (square.center_y >= WIN_HIGHT + square.side_length / 2) {
+            square.center_y = -square.side_length;
         }
-        // bounce when reaching floor
-        else if (square.center_y < square.side_length / 2) {
-            square.velocity  = -square.velocity;
-            square.center_y = square.side_length / 2;
-        }
-        square.center_y += square.velocity;
+        square.center_y += SPEED;
     }
 }
