@@ -1,6 +1,6 @@
 #include <SDL.h>
 #include <assert.h>
-#include <stdio.h>
+#include <math.h>
 
 
 #ifndef SIM_H
@@ -15,6 +15,5 @@ void quit_window();
 
 typedef struct circle_t circle_t;
 
-extern uint32_t get_pixel_color(int x, int y, circle_t* circles);
-extern void     update_circles(circle_t* circles);
+extern uint32_t get_pixel_color(int x, int y, circle_t circles);
 extern void     app();
