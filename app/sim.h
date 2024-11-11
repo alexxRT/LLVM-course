@@ -13,7 +13,7 @@ void quit_window();
 #define WIN_HIGHT 250
 #endif
 
-typedef struct circle_t circle_t;
+typedef struct square_t square_t;
 
-extern uint32_t get_pixel_color(int x, int y, circle_t circles);
+extern uint32_t get_pixel_color(int x, int y, square_t circles);
 extern void     app();

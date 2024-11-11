@@ -4,49 +4,47 @@ const int      SPEED    = 1;
 const uint32_t COLOR    = 0xFF000000;
 const int      CENTER_X = WIN_WIDTH / 2;
 
-typedef struct circle_t {
+typedef struct square_t {
     int center_y;
     int velocity;
-    int radius;
-} circle_t;
+    int side_length;
+} square_t;
 
-uint32_t get_pixel_color(int x, int y, circle_t c) {
-    int x_squared = (x - CENTER_X) * (x - CENTER_X);
-    int y_squared = (y - c.center_y) * (y - c.center_y);
-    int r_squared = (c.radius) * (c.radius);
+uint32_t get_pixel_color(int x, int y, square_t c) {
+    if (abs((x - CENTER_X) + (y - c.center_y)) + abs((x - CENTER_X) - (y - c.center_y)) <= c.side_length)
+        return COLOR;
 
-    if (x_squared + y_squared <= r_squared)
-            return COLOR;
     return 0xD3D3D3FF;
 }
 
 void app() {
-    // init circle
-    circle_t circle = {};
-    circle.center_y = WIN_HIGHT / 2;
-    circle.velocity = SPEED;
-    circle.radius   = WIN_WIDTH / 10;
+    // init square
+    square_t square    = {};
+    square.center_y    = WIN_HIGHT / 2;
+    square.velocity    = SPEED;
+    square.side_length = WIN_WIDTH / 10;
 
-    // now we need to paint circle moving
+    // now we need to paint square moving
     while(1) {
         for (int y = 0; y < WIN_HIGHT; y ++) {
             for (int x = 0; x < WIN_WIDTH; x ++) {
-                uint32_t color = get_pixel_color(x, y, circle);
+                uint32_t color = get_pixel_color(x, y, square);
                 paint_pixel(x, y, color);
             }
         }
         // displays colored pixels
         flush_window();
       
-        if (WIN_HIGHT - circle.center_y < circle.radius) {
-            circle.velocity = -circle.velocity;
-            circle.center_y = WIN_HIGHT - circle.radius;
-        }
         // bounce when reaching ceilling
-        else if (circle.center_y < circle.radius) {
-            circle.velocity  = -circle.velocity;
-            circle.center_y = circle.radius;
+        if (WIN_HIGHT - square.center_y < square.side_length / 2) {
+            square.velocity = -square.velocity;
+            square.center_y = WIN_HIGHT - square.side_length / 2;
         }
-        circle.center_y += circle.velocity;
+        // bounce when reaching floor
+        else if (square.center_y < square.side_length / 2) {
+            square.velocity  = -square.velocity;
+            square.center_y = square.side_length / 2;
+        }
+        square.center_y += square.velocity;
     }
 }
