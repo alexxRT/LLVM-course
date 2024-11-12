@@ -1,4 +1,4 @@
-#include "sim.h"
+#include "sim.hpp"
 
 const int      SPEED    = 1;
 const uint32_t COLOR    = 0xFF000000;
@@ -16,7 +16,7 @@ uint32_t get_pixel_color(int x, int y, square_t c) {
     return 0xD3D3D3FF;
 }
 
-void app() {
+extern "C" void app() {
     // init square
     square_t square    = {};
     square.center_y    = WIN_HIGHT / 2;

@@ -1,4 +1,4 @@
-#include "sim.h"
+#include "sim.hpp"
 
 #define FRAME_TICKS 20
 static uint32_t Tick = 0;
@@ -20,7 +20,7 @@ void create_window() {
     flush_window();
 }
 
-void paint_pixel(int x, int y, uint32_t rgba) {
+extern "C" void paint_pixel(int x, int y, uint32_t rgba) {
     assert(x <= WIN_WIDTH && "x coordinate is out of range to paint pixel");
     assert(y <= WIN_HIGHT && "y coordinate is out of range to paint pixel");
 
@@ -36,7 +36,7 @@ void paint_pixel(int x, int y, uint32_t rgba) {
 }
 
 
-void flush_window() {
+extern "C" void flush_window() {
     SDL_PumpEvents();
     assert(SDL_TRUE != SDL_HasEvent(SDL_QUIT) && "User-requested quit");
     // Uint32 cur_ticks = SDL_GetTicks() - Ticks;
