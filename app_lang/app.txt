@@ -1,0 +1,69 @@
+// screen sizes
+WIN_HIGHT = 250;
+WIN_WIDTH = 500;
+
+// current pixel coordinate
+y = 0;
+x = 0;
+
+abs_plus  = 0;
+abs_minus = 0;
+step = 0;
+
+//graphical constant
+color_background = 3553874943;
+color_square     = 4278190080;
+color = 0;
+
+// flying square params
+center_x = 250;
+center_y = 125;
+length   = 50;
+speed    = 1;
+
+func set_square_color
+abs_plus  = abs((x - center_x) + (y - center_y));
+abs_minus = abs((x - center_x) - (y - center_y));
+if abs_plus + abs_minus <= length | setSquare | setBack | setTerminate;
+  setSquare:
+    color = color_square;
+  setBack:
+  setTerminate:
+end
+
+func main
+  step = 0;
+  goto loopStep;
+
+  // infinite while(1) emulating
+  loopStep:
+    y = 0;
+    for step != -1 | loopY | loopStep_end;
+      loopY:
+        x = 0;
+        for y != WIN_HIGHT | loopX | loopY_end;
+          loopX:
+            for x != WIN_WIDTH | iterX | loopX_end;
+              iterX:
+                color = color_background;
+                call set_square_color;
+                paint_pixel(x, y, color);
+                x = x + 1;
+                goto loopX;
+          loopX_end:
+            y = y + 1;
+            goto loopY;
+      loopY_end:
+        step = step + 1;
+        flush_window();
+
+        // properly update square position
+        if center_y >= WIN_HIGHT  + length / 2 | updatePos | movePos | terminatePos;
+          updatePos: // if true condition
+            center_y = -1 * length;
+          movePos: // if false
+            center_y = center_y + 1;
+          terminatePos: // jump after branch execution
+            goto loopStep;
+  loopStep_end:
+end
